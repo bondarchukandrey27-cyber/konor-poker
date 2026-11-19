@@ -49,7 +49,6 @@ export function HandTrainer({ entries, setup }: Props) {
     setVerdict(null)
     setDecisionsThisHand(0)
     setInspected(null)
-    window.scrollTo({ top: 0, behavior: 'smooth' })
   }, [setup])
 
   useEffect(() => {
@@ -91,7 +90,6 @@ export function HandTrainer({ entries, setup }: Props) {
     else {
       setVerdict(null)
       setPhase('npc')
-      window.scrollTo({ top: 0, behavior: 'smooth' })
     }
   }, [hand.ended, newHand])
 
@@ -204,7 +202,7 @@ export function HandTrainer({ entries, setup }: Props) {
           <div className="verdict" aria-live="polite">
             <strong>{handOver}</strong>
             {decisionsThisHand > 0 || inspected ? (
-              <button type="button" className="btn btn--primary verdict__next" onClick={newHand} autoFocus>
+              <button type="button" className="btn btn--primary verdict__next" onClick={newHand}>
                 Next hand
               </button>
             ) : (

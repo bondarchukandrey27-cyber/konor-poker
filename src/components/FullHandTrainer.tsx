@@ -438,7 +438,6 @@ export function FullHandTrainer({ entries, setup, index }: Props) {
     } else {
       setVerdict(null)
       setPhase('npc')
-      window.scrollTo({ top: 0, behavior: 'smooth' })
     }
   }, [handOver, newHand])
 
@@ -726,7 +725,6 @@ export function FullHandTrainer({ entries, setup, index }: Props) {
               type="button"
               className="btn btn--primary verdict__next"
               onClick={newHand}
-              autoFocus
             >
               Next hand
             </button>

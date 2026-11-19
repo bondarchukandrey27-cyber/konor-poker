@@ -53,7 +53,7 @@ export function VerdictView({ verdict, source, continues, handOver, onProceed }:
           {text}
           {handOver ? ` ${handOver}` : ''}
         </span>
-        <button type="button" className="btn btn--primary verdict__next" onClick={onProceed} autoFocus>
+        <button type="button" className="btn btn--primary verdict__next" onClick={onProceed}>
           {handOver ? 'Next hand' : 'Continue'}
         </button>
       </div>
