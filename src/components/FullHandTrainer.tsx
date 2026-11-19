@@ -169,7 +169,6 @@ export function FullHandTrainer({ entries, setup, index }: Props) {
         })
 
         setPhase('npc')
-      window.scrollTo({ top: 120, behavior: 'smooth' })
       })
       .catch((err: Error) => {
         if (dealId.current !== id) return
