@@ -774,3 +774,32 @@ kbd {
   gap: 6px;
   margin: 0;
 }
+/* Keep trainer action button visible while scrolling */
+.verdict__next {
+  position: fixed;
+  right: 20px;
+  bottom: 20px;
+  z-index: 1000;
+  margin-left: 0;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.4);
+}
+
+@media (max-width: 600px) {
+  .verdict__next {
+    right: 14px;
+    bottom: 14px;
+  }
+}@media (max-width: 600px) {
+  .verdict__next {
+    position: fixed !important;
+    display: flex !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    right: 16px !important;
+    bottom: max(20px, env(safe-area-inset-bottom)) !important;
+    left: auto !important;
+    z-index: 99999 !important;
+    margin: 0 !important;
+    min-height: 44px;
+  }
+}

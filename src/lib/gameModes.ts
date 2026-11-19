@@ -18,8 +18,9 @@ export const GAME_MODE_INFO: Record<GameMode, GameModeInfo> = {
   },
 }
 
-export const DEFAULT_GAME_MODE: GameMode = 'full-hands'
+export const DEFAULT_GAME_MODE: GameMode = 'preflop'
 
 export function isGameMode(value: string | null | undefined): value is GameMode {
   return (GAME_MODES as readonly string[]).includes(value ?? '')
 }
+

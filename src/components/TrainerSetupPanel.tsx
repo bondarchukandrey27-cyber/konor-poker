@@ -29,7 +29,7 @@ interface Props {
 }
 
 export function TrainerSetupPanel({ setup, onChange, seatOnly }: Props) {
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(true);
   const stacks = stackOptions(setup.format);
 
   return (
@@ -167,3 +167,4 @@ export function TrainerSetupPanel({ setup, onChange, seatOnly }: Props) {
     </div>
   );
 }
+

@@ -24,14 +24,12 @@ const NPC_DELAY_MS = 1000
 const AUTO_NEXT_MS = 1200
 const COLD_3BET_NOTE = 'The charts only cover the previous raiser facing a re-raise, so a cold 3-bet is an automatic fold.'
 
-/** npc: opponents are acting · hero: waiting for the player · verdict: showing feedback on the player's move */
 type Phase = 'npc' | 'hero' | 'verdict'
 
 interface PreflopVerdict extends Verdict {
   decision: Decision
 }
 
-/** Preflop only: opponents play their cards from the charts and every decision of the player is graded. */
 export function HandTrainer({ entries, setup }: Props) {
   const [hand, setHand] = useState<HandState>(() => startHand(setup, Math.random, setup.seat))
   const [forcedFold, setForcedFold] = useState(false)
@@ -54,8 +52,6 @@ export function HandTrainer({ entries, setup }: Props) {
     window.scrollTo({ top: 0, behavior: 'smooth' })
   }, [setup])
 
-  // Drive opponents, hand the turn to the player, and deal again after hands with no decision
-  // unless the player is looking at an opponent's range.
   useEffect(() => {
     if (phase !== 'npc') return
     if (hand.ended) {
@@ -103,8 +99,22 @@ export function HandTrainer({ entries, setup }: Props) {
 
   const hero = heroSeat(hand)
   const acting = seatToAct(hand)
-  const folded = useMemo(() => new Set(hand.seats.filter((s) => s.folded).map((s) => s.position)), [hand])
-  const bets = useMemo(() => Object.fromEntries(hand.seats.filter((s) => s.committed > 0).map((s) => [s.position, s.committed])) as Partial<Record<Position, number>>, [hand])
+
+  const folded = useMemo(
+    () => new Set(hand.seats.filter((s) => s.folded).map((s) => s.position)),
+    [hand],
+  )
+
+  const bets = useMemo(
+    () => Object.fromEntries(hand.seats.filter((s) => s.committed > 0).map((s) => [s.position, s.committed])) as Partial<Record<Position, number>>,
+    [hand],
+  )
+
+  const stacks = useMemo(
+    () => Object.fromEntries(hand.seats.map((s) => [s.position, Math.max(0, setup.stack - s.committed)])) as Partial<Record<Position, number>>,
+    [hand, setup.stack],
+  )
+
   const labels = useMemo(() => {
     const out: Partial<Record<Position, string>> = {}
     const reveal = hand.ended && !['hero-folded', 'walk'].includes(hand.ended.kind)
@@ -115,18 +125,35 @@ export function HandTrainer({ entries, setup }: Props) {
     return out
   }, [hand])
 
-  const inspectable = useMemo(() => new Set(hand.seats.filter((s) => s.lastDecision && s.position !== hand.hero).map((s) => s.position)), [hand])
+  const inspectable = useMemo(
+    () => new Set(hand.seats.filter((s) => s.lastDecision && s.position !== hand.hero).map((s) => s.position)),
+    [hand],
+  )
+
   const inspectedSeat = inspected ? hand.seats.find((s) => s.position === inspected && s.lastDecision) : undefined
-  const inspectedWeights = useMemo(() => (inspectedSeat?.lastDecision ? resolveActions(inspectedSeat.lastDecision.entry.range) : null), [inspectedSeat?.lastDecision])
-  const toggleInspected = useCallback((position: Position) => setInspected((prev) => (prev === position ? null : position)), [])
+
+  const inspectedWeights = useMemo(
+    () => (inspectedSeat?.lastDecision ? resolveActions(inspectedSeat.lastDecision.entry.range) : null),
+    [inspectedSeat?.lastDecision],
+  )
+
+  const toggleInspected = useCallback(
+    (position: Position) => setInspected((prev) => (prev === position ? null : position)),
+    [],
+  )
 
   const shown = prompt ?? verdict?.prompt ?? null
   const shownDecision = decision ?? verdict?.decision ?? null
   const handOver = hand.ended ? `${hand.ended.message}${forcedFold ? ` ${COLD_3BET_NOTE}` : ''}` : null
-  const chartWeights = useMemo(() => (verdict && shownDecision ? resolveActions(shownDecision.entry.range) : null), [verdict, shownDecision])
+
+  const chartWeights = useMemo(
+    () => (verdict && shownDecision ? resolveActions(shownDecision.entry.range) : null),
+    [verdict, shownDecision],
+  )
 
   let title: string
   let subtitle: string
+
   if (shown) {
     title = shown.title
     subtitle = phase === 'hero' ? 'Your move' : shownDecision ? headline(shownDecision.scenario, setup, hand.hero, shownDecision.villain).subtitle : ''
@@ -158,6 +185,7 @@ export function HandTrainer({ entries, setup }: Props) {
           hero={hand.hero}
           villain={shownDecision?.villain}
           bets={bets}
+          stacks={stacks}
           acting={acting?.position}
           folded={folded}
           labels={labels}
@@ -165,6 +193,7 @@ export function HandTrainer({ entries, setup }: Props) {
           selected={inspectedSeat?.position}
           onSeatClick={toggleInspected}
         />
+
         <HoleCards cards={hero.cards} />
 
         {prompt ? (

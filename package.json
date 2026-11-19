@@ -16,6 +16,7 @@
     "solve:flops": "node scripts/solve-postflop.mjs"
   },
   "dependencies": {
+    "@supabase/supabase-js": "^2.119.2",
     "next": "^15.5.0",
     "react": "^19.1.0",
     "react-dom": "^19.1.0"

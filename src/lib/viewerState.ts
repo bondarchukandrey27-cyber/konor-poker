@@ -29,7 +29,7 @@ export interface ViewerState extends GameSetup {
 
 export const DEFAULT_STATE: ViewerState = {
   source: 'builtin',
-  format: 'cash',
+  format: 'mtt',
   players: 6,
   stack: 100,
   rangeType: 'pto',
@@ -96,3 +96,4 @@ export function toSearchParams(state: ViewerState): URLSearchParams {
   if (state.villain) params.set('villain', state.villain)
   return params
 }
+
