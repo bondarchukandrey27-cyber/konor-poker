@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createHmac, timingSafeEqual } from 'node:crypto'
-import { supabaseAdmin } from '@/lib/supabaseAdmin'
+import { getSupabaseAdmin } from '@/lib/supabaseAdmin'
 
 export const runtime = 'nodejs'
 
@@ -81,6 +81,8 @@ export async function POST(request: NextRequest) {
         { status: 401 }
       )
     }
+
+    const supabaseAdmin = getSupabaseAdmin()
 
     const displayName = [
       user.first_name,
